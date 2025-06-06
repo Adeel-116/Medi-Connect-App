@@ -1,36 +1,45 @@
 import React from 'react';
-import { TextInput, StyleSheet, View } from 'react-native';
+import { TextInput, View, StyleSheet, Text } from 'react-native';
 import colors from '../theme/Color';
-import fonts from '../theme/Font';
-const CustomInput = ({ placeholder, secureTextEntry, value, onChangeText }:any) => {
-  return (
-    <View style={styles.inputContainer}>
-      <TextInput
-        placeholder={placeholder}
-        placeholderTextColor={colors.placeholder}
-        secureTextEntry={secureTextEntry}
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-      />
-    </View>
-  );
-};
+
+interface Props {
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+  error?: string | null;
+}
+
+const CustomInput: React.FC<Props> = ({ placeholder, value, onChangeText, secureTextEntry, error }) => (
+  <View style={styles.container}>
+    <TextInput
+      placeholder={placeholder}
+      placeholderTextColor={colors.placeholder}
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
+      style={[styles.input, error && { borderColor: 'red' }]}
+    />
+    {error && <Text style={styles.error}>{error}</Text>}
+  </View>
+);
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    backgroundColor: colors.inputBackground,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  container: {
     marginBottom: 16,
   },
   input: {
-    fontFamily: fonts.regular,
-    fontSize: fonts.size.text,
-    color: colors.text,
+    backgroundColor: colors.inputBackground,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  error: {
+    color: 'red',
+    marginTop: 4,
+    fontSize: 12,
   },
 });
 
