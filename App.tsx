@@ -4,8 +4,8 @@ import Login from './src/screens/Login/Login';
 import Signup from './src/screens/Signup/Signup';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
 import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
-import VerifyOtp from './src/screens/VerifyOTP/verifyOTP';
 import SplashScreen from './src/screens/Splash/SplashScreen';
+import SplashCore from './src/screens/Splash/SplashCore';
 
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }}>
-        <SplashScreen />
+        <SplashCore />
       </SafeAreaView>
     </>
   );
