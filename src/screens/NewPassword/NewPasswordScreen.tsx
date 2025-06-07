@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { validatePassword } from '../../utils/validation';
@@ -22,12 +30,21 @@ const NewPasswordScreen = () => {
 
     if (!passwordErr && !confirmErr) {
       console.log('New password set successfully');
-      // Submit logic here
+      // Submit new password to backend
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* Top Bar with Back Button */}
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => ""}>
+          <View style={styles.backButton}>
+            <Ionicons name="arrow-back" size={20} color="#fff" />
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.container}>
         <Text style={styles.title}>Create New Password</Text>
         <Text style={styles.subtitle}>
@@ -50,7 +67,10 @@ const NewPasswordScreen = () => {
             error={errors.confirmPassword}
           />
 
-          <CustomButton title="Create New Password" onPress={handleCreatePassword} />
+          <CustomButton
+            title="Create New Password"
+            onPress={handleCreatePassword}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -62,11 +82,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  topBar: {
+    paddingHorizontal: 24,
+    paddingTop: StatusBar.currentHeight || 12,
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.text,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: 24,
-    backgroundColor: colors.background,
+    marginTop: 50,
+    alignItems: 'center',
   },
   title: {
     fontSize: 28,

@@ -3,7 +3,8 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import Login from './src/screens/Login/Login';
 import Signup from './src/screens/Signup/Signup';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
-import NewPasswordScreen from './src/components/NewPassword/NewPasswordScreen';
+import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
+import VerifyOtp from './src/screens/VerifyOTP/verifyOTP';
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }}>
-        <NewPasswordScreen />
+        <VerifyOtp />
       </SafeAreaView>
     </>
   );

@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'r
   },
   forgetPasswordContainer: {
     marginTop: 4,

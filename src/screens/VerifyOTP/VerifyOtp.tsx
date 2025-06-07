@@ -1,60 +1,52 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
-import {validateEmail} from '../../utils/validation';
 import colors from '../../theme/Color';
 
-const ForgotPassword = ({navigation}: any) => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+const VerifyOtp = () => {
+  const [otp, setOtp] = useState(['', '', '', '']);
 
-  const handleSendOTP = () => {
-    const emailError = validateEmail(email);
-    setError(emailError || '');
+  const handleChange = (text: string, index: number) => {
+    const newOtp = [...otp];
+    newOtp[index] = text.slice(-1);
+    setOtp(newOtp);
+  };
 
-    if (!emailError) {
-      console.log('OTP sent to:', email);
-      // Trigger OTP sending logic here
+  const handleVerifyOTP = () => {
+    const isValid = otp.every(digit => digit !== '');
+    if (isValid) {
+      const code = otp.join('');
+      console.log('Entered OTP:', code);
+      // Submit the OTP code to backend
+    } else {
+      console.log('Please enter complete OTP');
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Top Bar with Back Button */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => { }}>
           <View style={styles.backButton}>
             <Ionicons name="arrow-back" size={20} color="#fff" />
           </View>
         </TouchableOpacity>
       </View>
 
-      {/* Main Content */}
       <View style={styles.container}>
-        <Text style={styles.title}>Forgot Password?</Text>
+        <Text style={styles.title}>Verify OTP</Text>
         <Text style={styles.subtitle}>
-          Enter your registered email and we’ll send you an OTP to reset your password.
+          Enter the 4-digit code sent to your phone number.
         </Text>
 
-        <View style={styles.form}>
-          <CustomInput
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            error={error}
-          />
-
-          <CustomButton title="Send OTP" onPress={handleSendOTP} />
-        </View>
+        <CustomButton title="Verify" onPress={handleVerifyOTP} />
       </View>
     </SafeAreaView>
   );
@@ -67,11 +59,10 @@ const styles = StyleSheet.create({
   },
   topBar: {
     paddingHorizontal: 24,
-    paddingTop: StatusBar.currentHeight || 12,
-    marginTop: 40,
-    paddingBottom: 12,
+    marginTop: 30,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'red',
   },
   backButton: {
     width: 38,
@@ -92,18 +83,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: colors.placeholder,
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 24,
     lineHeight: 22,
   },
-  form: {
-    width: '100%',
+  otpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 24,
   },
+  otpBox: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: colors.placeholder,
+    textAlign: 'center',
+    fontSize: 24,
+    color: colors.text,
+  },
+  
 });
 
-export default ForgotPassword;
+export default VerifyOtp;
