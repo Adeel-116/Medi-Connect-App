@@ -10,5 +10,3 @@ export const validateName = (name: string): string | null =>
 export const validatePhoneNumber = (phone: string): string | null =>
   /^\d{10}$/.test(phone) ? null : 'Phone number must be 10 digits';
 
-export const validateConfirmPassword = (password: string, confirm: string): string | null =>
-  password === confirm ? null : 'Passwords do not match';
