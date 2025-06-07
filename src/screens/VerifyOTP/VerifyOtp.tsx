@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -11,29 +11,15 @@ import CustomButton from '../../components/CustomButton';
 import colors from '../../theme/Color';
 
 const VerifyOtp = () => {
-  const [otp, setOtp] = useState(['', '', '', '']);
-
-  const handleChange = (text: string, index: number) => {
-    const newOtp = [...otp];
-    newOtp[index] = text.slice(-1);
-    setOtp(newOtp);
-  };
-
   const handleVerifyOTP = () => {
-    const isValid = otp.every(digit => digit !== '');
-    if (isValid) {
-      const code = otp.join('');
-      console.log('Entered OTP:', code);
-      // Submit the OTP code to backend
-    } else {
-      console.log('Please enter complete OTP');
-    }
+    console.log('Verify button pressed');
+    // Trigger OTP verification logic here
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={() => { /* Add navigation.goBack() if needed */ }}>
           <View style={styles.backButton}>
             <Ionicons name="arrow-back" size={20} color="#fff" />
           </View>
@@ -92,24 +78,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     lineHeight: 22,
   },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginBottom: 24,
-  },
-  otpBox: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: colors.placeholder,
-    textAlign: 'center',
-    fontSize: 24,
-    color: colors.text,
-  },
-  
 });
 
 export default VerifyOtp;
