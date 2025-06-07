@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -18,7 +19,6 @@ import {
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CheckBoxIcon from 'react-native-vector-icons/Ionicons';
- 
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -27,6 +27,23 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState<any>({});
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handleSignup = () => {
     const newErrors = {
@@ -48,8 +65,17 @@ const Signup = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.formWrapper}>
+        showsVerticalScrollIndicator={false}
+      >
+        <Animated.View
+          style={[
+            styles.formWrapper,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY }],
+            },
+          ]}
+        >
           <Text style={styles.title}>Create an Account</Text>
           <Text style={styles.subtitle}>
             Create your account by filling in the information below, or sign up
@@ -86,18 +112,20 @@ const Signup = () => {
             <View style={styles.termsContainer}>
               <TouchableOpacity
                 onPress={() => setTermsAccepted(prev => !prev)}
-                activeOpacity={0.7}>
+                activeOpacity={0.7}
+              >
                 <CheckBoxIcon
                   name={termsAccepted ? 'checkbox-outline' : 'square-outline'}
                   size={24}
-                  color={'#000'} // black color
+                  color={'#000'}
                 />
               </TouchableOpacity>
               <Text style={styles.termsText}>
                 I agree to the{' '}
                 <Text
                   style={styles.linkText}
-                  onPress={() => console.log('Navigate to Terms')}>
+                  onPress={() => console.log('Navigate to Terms')}
+                >
                   Terms & Conditions
                 </Text>
               </Text>
@@ -106,7 +134,11 @@ const Signup = () => {
               <Text style={styles.errorText}>{errors.termsAccepted}</Text>
             )}
 
-            <CustomButton title="Sign Up" onPress={handleSignup} containerStyle={{marginTop: 15}} />
+            <CustomButton
+              title="Sign Up"
+              onPress={handleSignup}
+              containerStyle={{ marginTop: 15 }}
+            />
 
             <View style={styles.orContainer}>
               <View style={styles.line} />
@@ -114,24 +146,22 @@ const Signup = () => {
               <View style={styles.line} />
             </View>
 
-              <View style={styles.buttonContainer}>
-            <FancyImageButton
-              type="google"
-              imageSource={require('../../assets/google-remove-bg.png')}
-              onPress={() => console.log('Google pressed')}
-              containerStyle={styles.authButton}
-            />
-            <FancyImageButton
-              type="apple"
-              imageSource={require('../../assets/Iphone.png')}
-              onPress={() => console.log('Apple ID')}
-             containerStyle={styles.authButton}
-            />
+            <View style={styles.buttonContainer}>
+              <FancyImageButton
+                type="google"
+                imageSource={require('../../assets/google-remove-bg.png')}
+                onPress={() => console.log('Google pressed')}
+                containerStyle={styles.authButton}
+              />
+              <FancyImageButton
+                type="apple"
+                imageSource={require('../../assets/Iphone.png')}
+                onPress={() => console.log('Apple ID')}
+                containerStyle={styles.authButton}
+              />
+            </View>
           </View>
-
-
-          </View>
-        </View>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -155,7 +185,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '700',
-    color: colors.text, // black
+    color: colors.text,
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -205,14 +235,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginTop: -8,
   },
- buttonContainer: {
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  authButton:{
-    backgroundColor: "#e9ecef",
-  }
+  authButton: {
+    backgroundColor: '#e9ecef',
+  },
 });
-
 
 export default Signup;

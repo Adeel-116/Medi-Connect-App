@@ -54,33 +54,6 @@ const SplashScreen = ({ navigation }: any) => {
   const renderItem = ({ item }: any) => (
     <View style={styles.slide}>
       <Image source={item.image} style={styles.image} resizeMode="contain" />
-
-      {/* Pagination Dots */}
-      <View style={styles.pagination}>
-        {slides.map((_, i) => {
-          const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
-
-          const dotWidth = scrollX.interpolate({
-            inputRange,
-            outputRange: [8, 16, 8],
-            extrapolate: 'clamp',
-          });
-
-          const dotColor = scrollX.interpolate({
-            inputRange,
-            outputRange: ['#ccc', colors.primary, '#ccc'],
-            extrapolate: 'clamp',
-          });
-
-          return (
-            <Animated.View
-              key={i}
-              style={[styles.dot, { width: dotWidth, backgroundColor: dotColor }]}
-            />
-          );
-        })}
-      </View>
-
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.subtitle}>{item.subtitle}</Text>
     </View>
@@ -103,12 +76,37 @@ const SplashScreen = ({ navigation }: any) => {
             { useNativeDriver: false }
           )}
         />
+
+        <View style={styles.fixedPagination}>
+          {slides.map((_, i) => {
+            const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
+
+            const dotWidth = scrollX.interpolate({
+              inputRange,
+              outputRange: [8, 16, 8],
+              extrapolate: 'clamp',
+            });
+
+            const dotColor = scrollX.interpolate({
+              inputRange,
+              outputRange: ['#ccc', colors.primary, '#ccc'],
+              extrapolate: 'clamp',
+            });
+
+            return (
+              <Animated.View
+                key={i}
+                style={[styles.dot, { width: dotWidth, backgroundColor: dotColor }]}
+              />
+            );
+          })}
+        </View>
       </View>
 
       <View style={styles.footer}>
         <CustomButton
           title="Get Started"
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.navigate('Signup')}
           containerStyle={styles.button}
         />
 
@@ -124,7 +122,6 @@ const SplashScreen = ({ navigation }: any) => {
 };
 
 export default SplashScreen;
-
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -145,18 +142,6 @@ const styles = StyleSheet.create({
     height: height * 0.35,
     marginBottom: 10,
   },
-  pagination: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  dot: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#ccc',
-    marginHorizontal: 4,
-  },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -169,8 +154,20 @@ const styles = StyleSheet.create({
     color: colors.placeholder,
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: 16,
+    marginBottom: 24,
     paddingHorizontal: 10,
+  },
+  fixedPagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  dot: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ccc',
+    marginHorizontal: 4,
   },
   footer: {
     paddingHorizontal: 24,
