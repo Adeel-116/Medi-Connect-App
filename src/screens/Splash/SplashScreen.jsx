@@ -6,13 +6,11 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
-  Animated,
   Dimensions,
   FlatList,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import colors from '../../theme/Color';
-
 const { width, height } = Dimensions.get('window');
 
 const slides = [
@@ -20,7 +18,8 @@ const slides = [
     id: '1',
     image: require('../../assets/splash1.png'),
     title: 'MediConnect',
-    subtitle: 'Get instant doctor consultation anytime and anywhere on your mobile.',
+    subtitle:
+      'Get instant doctor consultation anytime and anywhere on your mobile.',
   },
   {
     id: '2',
@@ -36,22 +35,21 @@ const slides = [
   },
 ];
 
-const SplashScreen = ({ navigation }: any) => {
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef<FlatList>(null);
+const SplashScreen = ({navigation}) => {
+  const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex = (currentIndex + 1) % slides.length;
-      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+      flatListRef.current?.scrollToIndex({ index: nextIndex});
       setCurrentIndex(nextIndex);
     }, 3000);
 
     return () => clearInterval(interval);
   }, [currentIndex]);
 
-  const renderItem = ({ item }: any) => (
+  const renderItem = ({ item }) => (
     <View style={styles.slide}>
       <Image source={item.image} style={styles.image} resizeMode="contain" />
       <Text style={styles.title}>{item.title}</Text>
@@ -62,7 +60,7 @@ const SplashScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.flex1}>
-        <Animated.FlatList
+        <FlatList
           ref={flatListRef}
           data={slides}
           renderItem={renderItem}
@@ -71,48 +69,28 @@ const SplashScreen = ({ navigation }: any) => {
           pagingEnabled
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false }
-          )}
         />
 
         <View style={styles.fixedPagination}>
-          {slides.map((_, i) => {
-            const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
-
-            const dotWidth = scrollX.interpolate({
-              inputRange,
-              outputRange: [8, 16, 8],
-              extrapolate: 'clamp',
-            });
-
-            const dotColor = scrollX.interpolate({
-              inputRange,
-              outputRange: ['#ccc', colors.primary, '#ccc'],
-              extrapolate: 'clamp',
-            });
-
-            return (
-              <Animated.View
-                key={i}
-                style={[styles.dot, { width: dotWidth, backgroundColor: dotColor }]}
-              />
-            );
-          })}
+          {slides.map((_, i) => (
+            <View
+              key={i}
+              style={[styles.dot, currentIndex === i && styles.activeDot]}
+            />
+          ))}
         </View>
       </View>
 
       <View style={styles.footer}>
         <CustomButton
           title="Get Started"
-          onPress={() => navigation.navigate('Signup')}
+          onPress={()=> navigation.navigate("Signup")}
           containerStyle={styles.button}
         />
 
         <View style={styles.loginContainer}>
           <Text style={styles.loginText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={()=> navigation.navigate("Login")}>
             <Text style={styles.loginLink}> Login</Text>
           </TouchableOpacity>
         </View>
@@ -130,6 +108,7 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   slide: {
     width: width,
@@ -165,9 +144,14 @@ const styles = StyleSheet.create({
   },
   dot: {
     height: 8,
+    width: 8,
     borderRadius: 4,
     backgroundColor: '#ccc',
     marginHorizontal: 4,
+  },
+  activeDot: {
+    width: 16,
+    backgroundColor: colors.primary,
   },
   footer: {
     paddingHorizontal: 24,

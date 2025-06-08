@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,11 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
-import {validateEmail} from '../../utils/validation';
+import { validateEmail } from '../../utils/validation';
 import colors from '../../theme/Color';
+import CustomBackButton from '../../components/CustomBackButton';
 
-const ForgotPassword = ({navigation}: any) => {
+const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
@@ -29,16 +30,11 @@ const ForgotPassword = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Top Bar with Back Button */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#fff" />
-          </View>
-        </TouchableOpacity>
-      </View>
+  
+     
+        <CustomBackButton onPress={()=>navigation.navigate("Login")} />
+    
 
-      {/* Main Content */}
       <View style={styles.container}>
         <Text style={styles.title}>Forgot Password?</Text>
         <Text style={styles.subtitle}>
@@ -64,22 +60,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  topBar: {
-    paddingHorizontal: 24,
-    paddingTop: StatusBar.currentHeight || 12,
-    marginTop: 40,
-    paddingBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: colors.text,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flex: 1,

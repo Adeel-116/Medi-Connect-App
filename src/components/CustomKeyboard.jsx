@@ -1,11 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-type Props = {
-  onKeyPress: (key: string) => void;
-};
-
-const CustomKeyboard: React.FC<Props> = ({ onKeyPress }) => {
+const CustomKeyboard = ({ onKeyPress }) => {
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0'];
 
   return (
@@ -40,7 +36,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     width: '100%',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   keyButton: {
     width: 70,

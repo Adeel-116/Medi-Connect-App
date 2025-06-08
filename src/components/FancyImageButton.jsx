@@ -1,14 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Image, ViewStyle } from 'react-native';
+import { TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-interface Props {
-  type: 'google' | 'apple'; 
-  onPress?: () => void;
-  imageSource: any; 
-  containerStyle?: ViewStyle;
-}
-
-const FancyImageButton: React.FC<Props> = ({ type, onPress, imageSource, containerStyle }) => {
+const FancyImageButton = ({ type, onPress, imageSource, containerStyle }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -24,7 +17,7 @@ const styles = StyleSheet.create({
   circle: {
     width: 52,
     height: 52,
-    borderRadius: 25, 
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,

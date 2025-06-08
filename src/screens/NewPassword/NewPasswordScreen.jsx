@@ -20,8 +20,7 @@ const NewPasswordScreen = () => {
 
   const handleCreatePassword = () => {
     const passwordErr = validatePassword(password);
-    const confirmErr =
-      password !== confirmPassword ? 'Passwords do not match' : '';
+    const confirmErr = password !== confirmPassword ? 'Passwords do not match' : '';
 
     setErrors({
       password: passwordErr || '',
@@ -38,7 +37,7 @@ const NewPasswordScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       {/* Top Bar with Back Button */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => ""}>
+        <TouchableOpacity onPress={() => {}}>
           <View style={styles.backButton}>
             <Ionicons name="arrow-back" size={20} color="#fff" />
           </View>

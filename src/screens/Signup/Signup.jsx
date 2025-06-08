@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Animated,
 } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -20,45 +19,30 @@ import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CheckBoxIcon from 'react-native-vector-icons/Ionicons';
 
-const Signup = () => {
+const Signup = ({navigation}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [errors, setErrors] = useState<any>({});
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(30)).current;
-
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const [errors, setErrors] = useState({});
 
   const handleSignup = () => {
-    const newErrors = {
-      name: validateName(name),
-      email: validateEmail(email),
-      phoneNumber: validatePhoneNumber(phoneNumber),
-      password: validatePassword(password),
-      termsAccepted: termsAccepted ? '' : 'You must accept the terms.',
-    };
 
-    setErrors(newErrors);
+    navigation.navigate("Login")
+    // const newErrors = {
+    //   name: validateName(name),
+    //   email: validateEmail(email),
+    //   phoneNumber: validatePhoneNumber(phoneNumber),
+    //   password: validatePassword(password),
+    //   termsAccepted: termsAccepted ? '' : 'You must accept the terms.',
+    // };
 
-    if (!Object.values(newErrors).some(Boolean)) {
-      console.log('Signup successful!');
-    }
+    // setErrors(newErrors);
+
+    // if (!Object.values(newErrors).some(Boolean)) {
+    //   console.log('Signup successful!');
+    // }
   };
 
   return (
@@ -67,15 +51,7 @@ const Signup = () => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View
-          style={[
-            styles.formWrapper,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY }],
-            },
-          ]}
-        >
+        <View style={styles.formWrapper}>
           <Text style={styles.title}>Create an Account</Text>
           <Text style={styles.subtitle}>
             Create your account by filling in the information below, or sign up
@@ -161,7 +137,7 @@ const Signup = () => {
               />
             </View>
           </View>
-        </Animated.View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

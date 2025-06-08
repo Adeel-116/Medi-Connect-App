@@ -1,15 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle  } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import colors from '../theme/Color';
 
-interface Props {
-  title: string;
-  containerStyle?: ViewStyle;
-  onPress: () => void;
-}
-
-const CustomButton: React.FC<Props> = ({ title, onPress, containerStyle }) => (
-  <TouchableOpacity style={[styles.button, containerStyle]} onPress={onPress} activeOpacity={0.8}>
+const CustomButton = ({ title, onPress, containerStyle }) => (
+  <TouchableOpacity
+    style={[styles.button, containerStyle]}
+    onPress={onPress}
+    activeOpacity={0.8}
+  >
     <Text style={styles.text}>{title}</Text>
   </TouchableOpacity>
 );

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Text,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StatusBar,
   TextInput,
-  Animated,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../../theme/Color';
@@ -14,34 +13,8 @@ import CustomKeyboard from '../../components/CustomKeyboard';
 import CustomButton from '../../components/CustomButton';
 
 function OTP() {
-  const [otp, setOtp] = useState<string[]>(['', '', '', '']);
-  const inputs = useRef<Array<TextInput | null>>([]);
-
-  // Animation values
-  const inputAnimations = useRef(otp.map(() => new Animated.Value(0))).current;
-  const keyboardSlide = useRef(new Animated.Value(100)).current;
-
-  useEffect(() => {
-    // Animate each input box one after another
-    const animations = inputAnimations.map((anim, index) =>
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 300,
-        delay: index * 150,
-        useNativeDriver: true,
-      })
-    );
-
-    // Animate keyboard slide in
-    Animated.parallel([
-      Animated.stagger(100, animations),
-      Animated.timing(keyboardSlide, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
+  const [otp, setOtp] = useState(['', '', '', '']);
+  const inputs = useRef([]);
 
   return (
     <View style={styles.container}>
@@ -63,23 +36,10 @@ function OTP() {
         <Text style={{ color: colors.primary }}>adeel8128377@gmail.com</Text>
       </View>
 
-      {/* OTP Inputs with Animation */}
+      {/* OTP Inputs */}
       <View style={styles.inputContainer}>
         {otp.map((value, index) => (
-          <Animated.View
-            key={index}
-            style={{
-              opacity: inputAnimations[index],
-              transform: [
-                {
-                  translateY: inputAnimations[index].interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            }}
-          >
+          <View key={index}>
             <TextInput
               ref={ref => {
                 inputs.current[index] = ref;
@@ -97,7 +57,7 @@ function OTP() {
                 }
               }}
             />
-          </Animated.View>
+          </View>
         ))}
       </View>
 
@@ -106,17 +66,10 @@ function OTP() {
         <CustomButton title="Verify OTP" onPress={() => ''} />
       </View>
 
-      {/* Animated Keyboard */}
-      <Animated.View
-        style={[
-          styles.customKeyboard,
-          {
-            transform: [{ translateY: keyboardSlide }],
-          },
-        ]}
-      >
+      {/* Static Keyboard */}
+      <View style={styles.customKeyboard}>
         <CustomKeyboard onKeyPress={() => ''} />
-      </Animated.View>
+      </View>
     </View>
   );
 }

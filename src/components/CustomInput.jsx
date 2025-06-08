@@ -5,24 +5,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TextStyle,
-  ViewStyle,
 } from 'react-native';
-import Icon from "react-native-vector-icons/Ionicons"
+import Icon from 'react-native-vector-icons/Ionicons';
 import colors from '../theme/Color';
 
-interface Props {
-  placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  secureTextEntry?: boolean;
-  error?: string | null;
-  inputStyle?: TextStyle;
-  containerStyle?: ViewStyle;
-  onForgotPasswordPress?: () => void; 
-}
-
-const CustomInput: React.FC<Props> = ({
+const CustomInput = ({
   placeholder,
   value,
   onChangeText,
@@ -50,7 +37,7 @@ const CustomInput: React.FC<Props> = ({
           style={StyleSheet.flatten([
             styles.input,
             error && { borderColor: 'red' },
-            secureTextEntry && { paddingRight: 100}, 
+            secureTextEntry && { paddingRight: 100 },
             inputStyle,
           ])}
         />
