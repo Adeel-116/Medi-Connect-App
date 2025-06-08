@@ -11,38 +11,58 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {
   validateEmail,
-  validateName,
   validatePassword,
-  validatePhoneNumber,
+  validateName,
+  validatePhoneNumber
 } from '../../utils/validation';
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CheckBoxIcon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 
-const Signup = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+
+const Signup = ({ navigation }) => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+  });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleSignup = () => {
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
-    navigation.navigate("Login")
-    // const newErrors = {
-    //   name: validateName(name),
-    //   email: validateEmail(email),
-    //   phoneNumber: validatePhoneNumber(phoneNumber),
-    //   password: validatePassword(password),
-    //   termsAccepted: termsAccepted ? '' : 'You must accept the terms.',
-    // };
+  const handleSignup = async () => {
+    const newErrors = {
+      fullName: validateName(formData.fullName),
+      email: validateEmail(formData.email),
+      phoneNumber: validatePhoneNumber(formData.phoneNumber),
+      password: validatePassword(formData.password),
+      termsAccepted: termsAccepted ? null : 'You must accept the terms',
+    };
 
-    // setErrors(newErrors);
+    setErrors(newErrors);
 
-    // if (!Object.values(newErrors).some(Boolean)) {
-    //   console.log('Signup successful!');
-    // }
+    const hasErrors = Object.values(newErrors).some(err => err !== null);
+    if (hasErrors) {
+      return;
+    }
+
+    try {
+      console.log('Sending data:', formData);
+      const response = await axios.post('http://192.168.100.2:3000/signup', formData);
+      console.log('User registered:', response.data);
+      // Navigate or show success message if needed
+    } catch (error) {
+      if (error.response) {
+        console.log('Server error:', error.response.data);
+      } else {
+        console.log('Network error:', error.message);
+      }
+    }
   };
 
   return (
@@ -61,26 +81,26 @@ const Signup = ({navigation}) => {
           <View style={styles.form}>
             <CustomInput
               placeholder="Full Name"
-              value={name}
-              onChangeText={setName}
-              error={errors.name}
+              value={formData.fullName}
+              onChangeText={val => handleChange('fullName', val)}
+              error={errors.fullName}
             />
             <CustomInput
               placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
+              value={formData.email}
+              onChangeText={val => handleChange('email', val)}
               error={errors.email}
             />
             <CustomInput
               placeholder="Phone Number"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              value={formData.phoneNumber}
+              onChangeText={val => handleChange('phoneNumber', val)}
               error={errors.phoneNumber}
             />
             <CustomInput
               placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
+              value={formData.password}
+              onChangeText={val => handleChange('password', val)}
               secureTextEntry
               error={errors.password}
             />
