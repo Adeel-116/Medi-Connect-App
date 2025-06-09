@@ -12,7 +12,7 @@ import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
 import OTP from './src/screens/OTP/OTP';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
 import BottomTabs from './src/screens/Navigation/BottomTabs';
-
+import {AuthProvider} from './src/context/AuthContext'
 
 
 const Stack = createNativeStackNavigator();
@@ -30,7 +30,7 @@ function App() {
 
   return (
     <>
-    
+      
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>

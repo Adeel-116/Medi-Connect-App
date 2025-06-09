@@ -47,6 +47,9 @@ const Login = ({ navigation }) => {
 
       if (response.status === 200) {
         showToast('Login successful! 🎉', 'success');
+        console.log('Login response:', response.data);
+        const token = response.data.token;
+        console.log('Token:', token);
         navigation.navigate("MainApp")
   
       }

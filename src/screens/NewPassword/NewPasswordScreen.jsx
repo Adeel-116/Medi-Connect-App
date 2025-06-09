@@ -47,7 +47,7 @@ const NewPasswordScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const res = await axios.post('http://192.168.100.2:3000/update-password', { password }, {
-        withCredentials: true, // important if you're using cookies for session
+        withCredentials: true, 
       });
 
       const { status, data } = res;
@@ -55,8 +55,7 @@ const NewPasswordScreen = ({ navigation }) => {
       switch (status) {
         case 201:
           showToast(data.message || 'Password updated successfully.', 'success');
-          // Navigate to login screen or wherever you want
-          // navigation.navigate('Login');
+          navigation.navigate('Login');
           break;
         case 403:
           showToast(data.message || 'Session expired. Please try again.', 'error');
