@@ -11,6 +11,10 @@ import Signup from './src/screens/Signup/Signup';
 import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
 import OTP from './src/screens/OTP/OTP';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
+import BottomTabs from './src/screens/Navigation/BottomTabs';
+
+
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -40,6 +44,8 @@ function App() {
               <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
               <Stack.Screen name="OTP" component={OTP} />
               <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+
+               <Stack.Screen name="MainApp" component={BottomTabs} />
             </>
           )}
         </Stack.Navigator>

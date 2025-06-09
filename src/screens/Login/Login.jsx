@@ -47,7 +47,7 @@ const Login = ({ navigation }) => {
 
       if (response.status === 200) {
         showToast('Login successful! 🎉', 'success');
-        navigation.navigate("")
+        navigation.navigate("MainApp")
   
       }
     } catch (error) {

@@ -64,7 +64,7 @@ function OTP({ navigation }) {
       switch (res.status) {
         case 200:
           showToast(res.data.message || 'OTP verified successfully!', 'success');
-          navigation.navigate('NewPassword'); // Navigate to login or next screen
+          navigation.navigate('NewPassword'); 
           break;
         case 400:
           showToast(res.data.message || 'OTP is required.', 'error');
