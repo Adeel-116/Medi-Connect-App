@@ -8,24 +8,88 @@ import {
   TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 import colors from '../../theme/Color';
 import CustomKeyboard from '../../components/CustomKeyboard';
 import CustomButton from '../../components/CustomButton';
+import CustomToast from '../../components/CustomToast';
 
-function OTP() {
+function OTP({ navigation }) {
   const [otp, setOtp] = useState(['', '', '', '']);
   const inputs = useRef([]);
+  const [toast, setToast] = useState({
+    visible: false,
+    message: '',
+    type: 'info',
+  });
+
+  const showToast = (message, type = 'info') => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => {
+      setToast({ visible: false, message: '', type: 'info' });
+    }, 3000);
+  };
+
+  const handleKeyPress = key => {
+    if (key === 'backspace') {
+      const lastFilledIndex = otp.findLastIndex(val => val !== '');
+      if (lastFilledIndex >= 0) {
+        const newOtp = [...otp];
+        newOtp[lastFilledIndex] = '';
+        setOtp(newOtp);
+        inputs.current[lastFilledIndex]?.focus();
+      }
+    } else {
+      const emptyIndex = otp.findIndex(val => val === '');
+      if (emptyIndex !== -1) {
+        const newOtp = [...otp];
+        newOtp[emptyIndex] = key;
+        setOtp(newOtp);
+        inputs.current[emptyIndex]?.focus();
+      }
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const otpCode = otp.join('');
+    if (otpCode.length < 4) {
+      return showToast('Please enter the full OTP.', 'error');
+    }
+
+    try {
+      const res = await axios.post('http://192.168.100.2:3000/verify-otp', {
+        otp: otpCode,
+      });
+
+      switch (res.status) {
+        case 200:
+          showToast(res.data.message || 'OTP verified successfully!', 'success');
+          navigation.navigate('NewPassword'); // Navigate to login or next screen
+          break;
+        case 400:
+          showToast(res.data.message || 'OTP is required.', 'error');
+          break;
+        case 404:
+          showToast(res.data.message || 'OTP not found or expired.', 'error');
+          break;
+        case 410:
+          showToast(res.data.message || 'OTP has expired.', 'error');
+          break;
+        case 401:
+          showToast(res.data.message || 'Invalid OTP.', 'error');
+          break;
+        default:
+          showToast('Unexpected server response.', 'error');
+      }
+    } catch (error) {
+      const status = error.response?.status;
+      const message = error.response?.data?.message || 'Something went wrong.';
+      showToast(message, 'error');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
-          <View style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#fff" />
-          </View>
-        </TouchableOpacity>
-      </View>
 
       {/* Text Content */}
       <View style={styles.content}>
@@ -39,37 +103,31 @@ function OTP() {
       {/* OTP Inputs */}
       <View style={styles.inputContainer}>
         {otp.map((value, index) => (
-          <View key={index}>
-            <TextInput
-              ref={ref => {
-                inputs.current[index] = ref;
-              }}
-              style={styles.input}
-              maxLength={1}
-              keyboardType="numeric"
-              value={value}
-              onChangeText={text => {
-                const newOtp = [...otp];
-                newOtp[index] = text;
-                setOtp(newOtp);
-                if (text && index < otp.length - 1) {
-                  inputs.current[index + 1]?.focus();
-                }
-              }}
-            />
-          </View>
+          <TextInput
+            key={index}
+            ref={ref => (inputs.current[index] = ref)}
+            style={styles.input}
+            maxLength={1}
+            keyboardType="numeric"
+            value={value}
+            editable={false} 
+            selectTextOnFocus={false}
+          />
         ))}
       </View>
 
       {/* Verify Button */}
       <View style={styles.verifyButton}>
-        <CustomButton title="Verify OTP" onPress={() => ''} />
+        <CustomButton title="Verify OTP" onPress={handleVerifyOtp} />
       </View>
 
-      {/* Static Keyboard */}
+      {/* Custom Keyboard */}
       <View style={styles.customKeyboard}>
-        <CustomKeyboard onKeyPress={() => ''} />
+        <CustomKeyboard onKeyPress={handleKeyPress} />
       </View>
+
+      {/* Toast Notification */}
+      <CustomToast visible={toast.visible} message={toast.message} type={toast.type} />
     </View>
   );
 }
@@ -130,6 +188,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 24,
     textAlign: 'center',
+    backgroundColor: '#f5f5f5',
   },
   verifyButton: {
     width: '90%',

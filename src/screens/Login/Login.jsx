@@ -1,54 +1,89 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
+import axios from 'axios';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { validateEmail, validatePassword } from '../../utils/validation';
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
+import CustomToast from '../../components/CustomToast';
 
-const Login = ({navigation}) => {
-
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = ({ navigation }) => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [toast, setToast] = useState({
+    visible: false,
+    message: '',
+    type: 'info',
+  });
 
-  const handleLogin = () => {
-    const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password);
-    setErrors({ email: emailErr || '', password: passwordErr || '' });
-
-    if (!emailErr && !passwordErr) {
-      console.log('Logging in...');
-    }
+  const showToast = (message, type = 'info') => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => setToast({ visible: false, message: '', type }), 3000);
   };
 
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleLogin = async () => {
+    const emailErr = validateEmail(formData.email);
+    const passwordErr = validatePassword(formData.password);
+    setErrors({ email: emailErr || '', password: passwordErr || '' });
+
+    if (emailErr || passwordErr) {
+      showToast('Please fix the errors above.', 'error');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://192.168.100.2:3000/login', formData);
+
+      if (response.status === 200) {
+        showToast('Login successful! 🎉', 'success');
+        navigation.navigate("")
+  
+      }
+    } catch (error) {
+      let msg = 'Something went wrong.';
+      if (error.response?.data?.error) {
+        msg = error.response.data.error;
+      }
+      showToast(msg, 'error');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Sign In</Text>
-        <Text style={styles.subtitle}>
-          Hi, Welcome back, you have been missed.
-        </Text>
+        <Text style={styles.subtitle}>Hi, Welcome back, you have been missed.</Text>
 
         <View style={styles.form}>
           <CustomInput
             placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
+            value={formData.email}
+            onChangeText={val => handleChange('email', val)}
             error={errors.email}
           />
           <CustomInput
             placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
+            value={formData.password}
+            onChangeText={val => handleChange('password', val)}
             secureTextEntry
             error={errors.password}
           />
 
-          {/* Forgot Password Text */}
-          <TouchableOpacity onPress={()=> navigation.navigate("ForgotPassword")} style={styles.forgotContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ForgotPassword')}
+            style={styles.forgotContainer}
+          >
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
 
@@ -75,6 +110,8 @@ const Login = ({navigation}) => {
             />
           </View>
         </View>
+
+        <CustomToast visible={toast.visible} message={toast.message} type={toast.type} />
       </View>
     </SafeAreaView>
   );

@@ -11,7 +11,6 @@ import Signup from './src/screens/Signup/Signup';
 import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
 import OTP from './src/screens/OTP/OTP';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
-
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -27,6 +26,7 @@ function App() {
 
   return (
     <>
+    
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>

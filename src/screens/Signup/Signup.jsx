@@ -13,13 +13,13 @@ import {
   validateEmail,
   validatePassword,
   validateName,
-  validatePhoneNumber
+  validatePhoneNumber,
 } from '../../utils/validation';
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CheckBoxIcon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-
+import CustomToast from '../../components/CustomToast'; // ✅ Import
 
 const Signup = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -30,6 +30,12 @@ const Signup = ({ navigation }) => {
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' }); // ✅ Toast state
+
+  const showToast = (message, type = 'info') => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => setToast({ visible: false, message: '', type }), 3000);
+  };
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -48,34 +54,32 @@ const Signup = ({ navigation }) => {
 
     const hasErrors = Object.values(newErrors).some(err => err !== null);
     if (hasErrors) {
+      showToast('Please fix the errors above.', 'error');
       return;
     }
 
     try {
-      console.log('Sending data:', formData);
       const response = await axios.post('http://192.168.100.2:3000/signup', formData);
-      console.log('User registered:', response.data);
-      // Navigate or show success message if needed
-    } catch (error) {
-      if (error.response) {
-        console.log('Server error:', error.response.data);
-      } else {
-        console.log('Network error:', error.message);
+      if (response.status === 201 || response.status === 200) {
+        showToast('Account created successfully! 🎉', 'success');
+        navigation.navigate('Login');
       }
+    } catch (error) {
+      let msg = 'Something went wrong.';
+      if (error.response?.data?.message) {
+        msg = error.response.data.message;
+      }
+      showToast(msg, 'error');
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.formWrapper}>
           <Text style={styles.title}>Create an Account</Text>
           <Text style={styles.subtitle}>
-            Create your account by filling in the information below, or sign up
-            with social media.
+            Create your account by filling in the information below, or sign up with social media.
           </Text>
 
           <View style={styles.form}>
@@ -106,10 +110,7 @@ const Signup = ({ navigation }) => {
             />
 
             <View style={styles.termsContainer}>
-              <TouchableOpacity
-                onPress={() => setTermsAccepted(prev => !prev)}
-                activeOpacity={0.7}
-              >
+              <TouchableOpacity onPress={() => setTermsAccepted(prev => !prev)} activeOpacity={0.7}>
                 <CheckBoxIcon
                   name={termsAccepted ? 'checkbox-outline' : 'square-outline'}
                   size={24}
@@ -118,10 +119,7 @@ const Signup = ({ navigation }) => {
               </TouchableOpacity>
               <Text style={styles.termsText}>
                 I agree to the{' '}
-                <Text
-                  style={styles.linkText}
-                  onPress={() => console.log('Navigate to Terms')}
-                >
+                <Text style={styles.linkText} onPress={() => console.log('Navigate to Terms')}>
                   Terms & Conditions
                 </Text>
               </Text>
@@ -130,11 +128,7 @@ const Signup = ({ navigation }) => {
               <Text style={styles.errorText}>{errors.termsAccepted}</Text>
             )}
 
-            <CustomButton
-              title="Sign Up"
-              onPress={handleSignup}
-              containerStyle={{ marginTop: 15 }}
-            />
+            <CustomButton title="Sign Up" onPress={handleSignup} containerStyle={{ marginTop: 15 }} />
 
             <View style={styles.orContainer}>
               <View style={styles.line} />
@@ -159,6 +153,9 @@ const Signup = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+
+      {/* ✅ Custom toast display */}
+      <CustomToast visible={toast.visible} message={toast.message} type={toast.type} />
     </SafeAreaView>
   );
 };
