@@ -1,4 +1,4 @@
-import React, { Component, useContext} from 'react';
+import React, { useContext} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -18,11 +18,7 @@ const colors = {
   lightBlue: '#E3F2FD',
 };
 
-export class HomeScreen extends Component {
-  
-
-  render() {
-  
+export function HomeScreen({ navigation }) {
     
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -206,7 +202,7 @@ export class HomeScreen extends Component {
       </ScrollView>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   container: {

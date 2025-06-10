@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
-const { width } = Dimensions.get('window');
 
 const colors = {
   primary: '#3670c4',
@@ -15,7 +13,7 @@ const colors = {
   inputBackground: '#FFFFFF',
   buttonText: '#FFFFFF',
   border: '#E5E5E5',
-  success: '#4CAF50',
+  success: '#4CAE50',
   warning: '#FF9800',
   lightBlue: '#E3F2FD',
   lightGreen: '#E8F5E8',
@@ -23,25 +21,20 @@ const colors = {
   lightRed: '#FFEBEE',
 };
 
-export class AppointmentScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: 'upcoming', // upcoming, past, cancelled
-    };
-  }
+const AppointmentScreen = () => {
+  const [selectedTab, setSelectedTab] = useState('upcoming');
 
-  renderTabButton = (tab, title, count) => (
+  const renderTabButton = (tab, title, count) => (
     <TouchableOpacity 
       style={[
         styles.tabButton, 
-        this.state.selectedTab === tab && styles.activeTab
+        selectedTab === tab && styles.activeTab
       ]}
-      onPress={() => this.setState({ selectedTab: tab })}
+      onPress={() => setSelectedTab(tab)}
     >
       <Text style={[
         styles.tabText, 
-        this.state.selectedTab === tab && styles.activeTabText
+        selectedTab === tab && styles.activeTabText
       ]}>
         {title}
       </Text>
@@ -53,7 +46,7 @@ export class AppointmentScreen extends Component {
     </TouchableOpacity>
   );
 
-  renderAppointmentCard = (appointment) => (
+  const renderAppointmentCard = (appointment) => (
     <View key={appointment.id} style={styles.appointmentCard}>
       <View style={styles.appointmentHeader}>
         <View style={styles.doctorSection}>
@@ -99,7 +92,7 @@ export class AppointmentScreen extends Component {
       )}
 
       <View style={styles.appointmentActions}>
-        {this.state.selectedTab === 'upcoming' && (
+        {selectedTab === 'upcoming' && (
           <>
             <TouchableOpacity style={styles.actionButton}>
               <Icon name="chat" size={16} color={colors.primary} />
@@ -115,7 +108,7 @@ export class AppointmentScreen extends Component {
           </>
         )}
         
-        {this.state.selectedTab === 'past' && (
+        {selectedTab === 'past' && (
           <>
             <TouchableOpacity style={styles.actionButton}>
               <Icon name="receipt" size={16} color={colors.primary} />
@@ -131,7 +124,7 @@ export class AppointmentScreen extends Component {
     </View>
   );
 
-  getAppointments = () => {
+  const getAppointments = () => {
     const allAppointments = {
       upcoming: [
         {
@@ -225,82 +218,80 @@ export class AppointmentScreen extends Component {
       ],
     };
     
-    return allAppointments[this.state.selectedTab] || [];
+    return allAppointments[selectedTab] || [];
   };
 
-  render() {
-    const appointments = this.getAppointments();
-    
-    return (
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.headerTitle}>My Appointments</Text>
-            <Text style={styles.headerSubtitle}>Manage your healthcare schedule</Text>
-          </View>
-          <TouchableOpacity style={styles.addButton}>
-            <AntIcon name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
+  const appointments = getAppointments();
+  
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Text style={styles.headerTitle}>My Appointments</Text>
+          <Text style={styles.headerSubtitle}>Manage your healthcare schedule</Text>
         </View>
-
-        {/* Quick Stats */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>3</Text>
-            <Text style={styles.statLabel}>Upcoming</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>12</Text>
-            <Text style={styles.statLabel}>This Month</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>2</Text>
-            <Text style={styles.statLabel}>Video Calls</Text>
-          </View>
-        </View>
-
-        {/* Tab Navigation */}
-        <View style={styles.tabContainer}>
-          {this.renderTabButton('upcoming', 'Upcoming', 3)}
-          {this.renderTabButton('past', 'Past', 2)}
-          {this.renderTabButton('cancelled', 'Cancelled', 1)}
-        </View>
-
-        {/* Appointments List */}
-        <ScrollView 
-          style={styles.appointmentsList} 
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.appointmentsContent}
-        >
-          {appointments.length > 0 ? (
-            appointments.map(appointment => this.renderAppointmentCard(appointment))
-          ) : (
-            <View style={styles.emptyState}>
-              <Icon name="event-busy" size={48} color={colors.placeholder} />
-              <Text style={styles.emptyStateTitle}>No appointments found</Text>
-              <Text style={styles.emptyStateText}>
-                {this.state.selectedTab === 'upcoming' 
-                  ? 'Schedule your next appointment to get started'
-                  : `No ${this.state.selectedTab} appointments to show`}
-              </Text>
-              {this.state.selectedTab === 'upcoming' && (
-                <TouchableOpacity style={styles.scheduleButton}>
-                  <Text style={styles.scheduleButtonText}>Schedule Appointment</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-        </ScrollView>
-
-        {/* Floating Action Button */}
-        <TouchableOpacity style={styles.fab}>
-          <Icon name="add" size={24} color="#fff" />
+        <TouchableOpacity style={styles.addButton}>
+          <AntIcon name="plus" size={20} color="#fff" />
         </TouchableOpacity>
       </View>
-    );
-  }
-}
+
+      {/* Quick Stats */}
+      <View style={styles.statsContainer}>
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>3</Text>
+          <Text style={styles.statLabel}>Upcoming</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>12</Text>
+          <Text style={styles.statLabel}>This Month</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>2</Text>
+          <Text style={styles.statLabel}>Video Calls</Text>
+        </View>
+      </View>
+
+      {/* Tab Navigation */}
+      <View style={styles.tabContainer}>
+        {renderTabButton('upcoming', 'Upcoming', 3)}
+        {renderTabButton('past', 'Past', 2)}
+        {renderTabButton('cancelled', 'Cancelled', 1)}
+      </View>
+
+      {/* Appointments List */}
+      <ScrollView 
+        style={styles.appointmentsList} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.appointmentsContent}
+      >
+        {appointments.length > 0 ? (
+          appointments.map(appointment => renderAppointmentCard(appointment))
+        ) : (
+          <View style={styles.emptyState}>
+            <Icon name="event-busy" size={48} color={colors.placeholder} />
+            <Text style={styles.emptyStateTitle}>No appointments found</Text>
+            <Text style={styles.emptyStateText}>
+              {selectedTab === 'upcoming' 
+                ? 'Schedule your next appointment to get started'
+                : `No ${selectedTab} appointments to show`}
+            </Text>
+            {selectedTab === 'upcoming' && (
+              <TouchableOpacity style={styles.scheduleButton}>
+                <Text style={styles.scheduleButtonText}>Schedule Appointment</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+      </ScrollView>
+
+      {/* Floating Action Button */}
+      <TouchableOpacity style={styles.fab}>
+        <Icon name="add" size={24} color="#fff" />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

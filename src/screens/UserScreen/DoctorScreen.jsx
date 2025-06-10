@@ -22,7 +22,7 @@ const colors = {
   lightRed: '#FFEBEE',
 };
 
-export class DoctorScreen extends Component {
+export function DoctorScreen({ navigation }) {
   state = {
     searchQuery: '',
     selectedSpecialty: 'All',
@@ -245,7 +245,7 @@ export class DoctorScreen extends Component {
     );
   };
 
-  render() {
+ 
     const filteredDoctors = this.getFilteredDoctors();
 
     return (
@@ -338,7 +338,7 @@ export class DoctorScreen extends Component {
       </View>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   container: {

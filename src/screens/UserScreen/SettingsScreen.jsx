@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -52,91 +52,81 @@ const darkColors = {
   danger: '#FF4444',
 };
 
-export class SettingsScreen extends Component {
-  state = {
-    isDarkMode: false,
-    notifications: true,
-    locationServices: true,
-    biometricAuth: false,
-    autoBackup: true,
-    showEditModal: false,
-    showImagePicker: false,
-    userProfile: {
-      name: 'Ali Rahman',
-      email: 'ali.rahman@email.com',
-      phone: '+92 300 1234567',
-      dateOfBirth: '1990-05-15',
-      gender: 'Male',
-      bloodGroup: 'B+',
-      address: 'Block 5, Gulshan-e-Iqbal, Karachi',
-      emergencyContact: '+92 321 9876543',
-      profileImage: null,
-    },
-    editingField: null,
-    editValue: '',
+const SettingsScreen = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(true);
+  const [locationServices, setLocationServices] = useState(true);
+  const [biometricAuth, setBiometricAuth] = useState(false);
+  const [autoBackup, setAutoBackup] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [editingField, setEditingField] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const [userProfile, setUserProfile] = useState({
+    name: 'Ali Rahman',
+    email: 'ali.rahman@email.com',
+    phone: '+92 300 1234567',
+    dateOfBirth: '1990-05-15',
+    gender: 'Male',
+    bloodGroup: 'B+',
+    address: 'Block 5, Gulshan-e-Iqbal, Karachi',
+    emergencyContact: '+92 321 9876543',
+    profileImage: null,
+  });
+
+  const getCurrentColors = () => {
+    return isDarkMode ? darkColors : colors;
   };
 
-  getCurrentColors = () => {
-    return this.state.isDarkMode ? darkColors : colors;
-  };
-
-  toggleDarkMode = () => {
-    this.setState({ isDarkMode: !this.state.isDarkMode });
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
     StatusBar.setBarStyle(
-      !this.state.isDarkMode ? 'light-content' : 'dark-content',
+      !isDarkMode ? 'light-content' : 'dark-content',
       true
     );
   };
 
-  handleEditField = (field, value) => {
-    this.setState({
-      editingField: field,
-      editValue: value,
-      showEditModal: true,
-    });
+  const handleEditField = (field, value) => {
+    setEditingField(field);
+    setEditValue(value);
+    setShowEditModal(true);
   };
 
-  saveFieldEdit = () => {
-    if (this.state.editingField && this.state.editValue.trim()) {
-      this.setState({
-        userProfile: {
-          ...this.state.userProfile,
-          [this.state.editingField]: this.state.editValue.trim(),
-        },
-        showEditModal: false,
-        editingField: null,
-        editValue: '',
-      });
+  const saveFieldEdit = () => {
+    if (editingField && editValue.trim()) {
+      setUserProfile(prev => ({
+        ...prev,
+        [editingField]: editValue.trim(),
+      }));
+      setShowEditModal(false);
+      setEditingField(null);
+      setEditValue('');
     }
   };
 
-  handleImagePicker = () => {
-    this.setState({ showImagePicker: true });
+  const handleImagePicker = () => {
+    setShowImagePicker(true);
   };
 
-  selectImageOption = (option) => {
-    this.setState({ showImagePicker: false });
+  const selectImageOption = (option) => {
+    setShowImagePicker(false);
     
     // In a real app, you would implement actual image picking logic here
     if (option === 'camera' || option === 'gallery') {
       // Simulate image selection
-      this.setState({
-        userProfile: {
-          ...this.state.userProfile,
-          profileImage: 'https://via.placeholder.com/100x100.png?text=User',
-        },
-      });
+      setUserProfile(prev => ({
+        ...prev,
+        profileImage: 'https://via.placeholder.com/100x100.png?text=User',
+      }));
     } else if (option === 'remove') {
-      this.setState({
-        userProfile: {
-          ...this.state.userProfile,
-          profileImage: null,
-        },
-      });
+      setUserProfile(prev => ({
+        ...prev,
+        profileImage: null,
+      }));
     }
   };
 
-  handleLogout = () => {
+  const handleLogout = () => {
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',
@@ -157,7 +147,7 @@ export class SettingsScreen extends Component {
     );
   };
 
-  handleDeleteAccount = () => {
+  const handleDeleteAccount = () => {
     Alert.alert(
       'Delete Account',
       'This action cannot be undone. Are you absolutely sure?',
@@ -178,9 +168,8 @@ export class SettingsScreen extends Component {
     );
   };
 
-  renderProfileSection = () => {
-    const currentColors = this.getCurrentColors();
-    const { userProfile } = this.state;
+  const renderProfileSection = () => {
+    const currentColors = getCurrentColors();
 
     return (
       <View style={[styles.profileSection, { backgroundColor: currentColors.inputBackground }]}>
@@ -195,7 +184,7 @@ export class SettingsScreen extends Component {
             )}
             <TouchableOpacity
               style={[styles.editImageButton, { backgroundColor: currentColors.primary }]}
-              onPress={this.handleImagePicker}
+              onPress={handleImagePicker}
             >
               <Icon name="camera-alt" size={16} color="#fff" />
             </TouchableOpacity>
@@ -218,8 +207,8 @@ export class SettingsScreen extends Component {
     );
   };
 
-  renderSettingItem = (icon, title, subtitle, onPress, rightComponent) => {
-    const currentColors = this.getCurrentColors();
+  const renderSettingItem = (icon, title, subtitle, onPress, rightComponent) => {
+    const currentColors = getCurrentColors();
     
     return (
       <TouchableOpacity
@@ -247,23 +236,23 @@ export class SettingsScreen extends Component {
     );
   };
 
-  renderEditModal = () => {
-    const currentColors = this.getCurrentColors();
+  const renderEditModal = () => {
+    const currentColors = getCurrentColors();
     
     return (
       <Modal
-        visible={this.state.showEditModal}
+        visible={showEditModal}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => this.setState({ showEditModal: false })}
+        onRequestClose={() => setShowEditModal(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: currentColors.inputBackground }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: currentColors.text }]}>
-                Edit {this.state.editingField}
+                Edit {editingField}
               </Text>
-              <TouchableOpacity onPress={() => this.setState({ showEditModal: false })}>
+              <TouchableOpacity onPress={() => setShowEditModal(false)}>
                 <Icon name="close" size={24} color={currentColors.placeholder} />
               </TouchableOpacity>
             </View>
@@ -274,24 +263,24 @@ export class SettingsScreen extends Component {
                 color: currentColors.text,
                 borderColor: currentColors.border,
               }]}
-              value={this.state.editValue}
-              onChangeText={(text) => this.setState({ editValue: text })}
-              placeholder={`Enter ${this.state.editingField}`}
+              value={editValue}
+              onChangeText={setEditValue}
+              placeholder={`Enter ${editingField}`}
               placeholderTextColor={currentColors.placeholder}
-              multiline={this.state.editingField === 'address'}
-              numberOfLines={this.state.editingField === 'address' ? 3 : 1}
+              multiline={editingField === 'address'}
+              numberOfLines={editingField === 'address' ? 3 : 1}
             />
             
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton, { borderColor: currentColors.border }]}
-                onPress={() => this.setState({ showEditModal: false })}
+                onPress={() => setShowEditModal(false)}
               >
                 <Text style={[styles.cancelButtonText, { color: currentColors.text }]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.saveButton, { backgroundColor: currentColors.primary }]}
-                onPress={this.saveFieldEdit}
+                onPress={saveFieldEdit}
               >
                 <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
@@ -302,15 +291,15 @@ export class SettingsScreen extends Component {
     );
   };
 
-  renderImagePickerModal = () => {
-    const currentColors = this.getCurrentColors();
+  const renderImagePickerModal = () => {
+    const currentColors = getCurrentColors();
     
     return (
       <Modal
-        visible={this.state.showImagePicker}
+        visible={showImagePicker}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => this.setState({ showImagePicker: false })}
+        onRequestClose={() => setShowImagePicker(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.imagePickerContent, { backgroundColor: currentColors.inputBackground }]}>
@@ -320,7 +309,7 @@ export class SettingsScreen extends Component {
             
             <TouchableOpacity
               style={styles.imageOption}
-              onPress={() => this.selectImageOption('camera')}
+              onPress={() => selectImageOption('camera')}
             >
               <Icon name="camera-alt" size={24} color={currentColors.primary} />
               <Text style={[styles.imageOptionText, { color: currentColors.text }]}>Take Photo</Text>
@@ -328,16 +317,16 @@ export class SettingsScreen extends Component {
             
             <TouchableOpacity
               style={styles.imageOption}
-              onPress={() => this.selectImageOption('gallery')}
+              onPress={() => selectImageOption('gallery')}
             >
               <Icon name="photo-library" size={24} color={currentColors.primary} />
               <Text style={[styles.imageOptionText, { color: currentColors.text }]}>Choose from Gallery</Text>
             </TouchableOpacity>
             
-            {this.state.userProfile.profileImage && (
+            {userProfile.profileImage && (
               <TouchableOpacity
                 style={styles.imageOption}
-                onPress={() => this.selectImageOption('remove')}
+                onPress={() => selectImageOption('remove')}
               >
                 <Icon name="delete" size={24} color={currentColors.danger} />
                 <Text style={[styles.imageOptionText, { color: currentColors.danger }]}>Remove Photo</Text>
@@ -346,7 +335,7 @@ export class SettingsScreen extends Component {
             
             <TouchableOpacity
               style={[styles.cancelImageButton, { backgroundColor: currentColors.background }]}
-              onPress={() => this.setState({ showImagePicker: false })}
+              onPress={() => setShowImagePicker(false)}
             >
               <Text style={[styles.cancelImageText, { color: currentColors.text }]}>Cancel</Text>
             </TouchableOpacity>
@@ -356,201 +345,198 @@ export class SettingsScreen extends Component {
     );
   };
 
-  render() {
-    const currentColors = this.getCurrentColors();
-    const { userProfile } = this.state;
+  const currentColors = getCurrentColors();
 
-    return (
-      <View style={[styles.container, { backgroundColor: currentColors.background }]}>
-        <StatusBar
-          barStyle={this.state.isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={currentColors.background}
-        />
-        
-        {/* Header */}
-        <View style={[styles.header, { backgroundColor: currentColors.background }]}>
-          <TouchableOpacity style={styles.backButton}>
-            <Icon name="arrow-back" size={24} color={currentColors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: currentColors.text }]}>Settings</Text>
-          <View style={styles.headerRight} />
+  return (
+    <View style={[styles.container, { backgroundColor: currentColors.background }]}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={currentColors.background}
+      />
+      
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: currentColors.background }]}>
+        <TouchableOpacity style={styles.backButton}>
+          <Icon name="arrow-back" size={24} color={currentColors.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: currentColors.text }]}>Settings</Text>
+        <View style={styles.headerRight} />
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Profile Section */}
+        {renderProfileSection()}
+
+        {/* Personal Information */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Personal Information</Text>
+          
+          {renderSettingItem(
+            <Icon name="email" size={20} color={currentColors.primary} />,
+            'Email Address',
+            userProfile.email,
+            () => handleEditField('email', userProfile.email)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="phone" size={20} color={currentColors.primary} />,
+            'Phone Number',
+            userProfile.phone,
+            () => handleEditField('phone', userProfile.phone)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="cake" size={20} color={currentColors.primary} />,
+            'Date of Birth',
+            userProfile.dateOfBirth,
+            () => handleEditField('dateOfBirth', userProfile.dateOfBirth)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="person-outline" size={20} color={currentColors.primary} />,
+            'Gender',
+            userProfile.gender,
+            () => handleEditField('gender', userProfile.gender)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="opacity" size={20} color={currentColors.primary} />,
+            'Blood Group',
+            userProfile.bloodGroup,
+            () => handleEditField('bloodGroup', userProfile.bloodGroup)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="location-on" size={20} color={currentColors.primary} />,
+            'Address',
+            userProfile.address,
+            () => handleEditField('address', userProfile.address)
+          )}
+          
+          {renderSettingItem(
+            <Icon name="emergency" size={20} color={currentColors.primary} />,
+            'Emergency Contact',
+            userProfile.emergencyContact,
+            () => handleEditField('emergencyContact', userProfile.emergencyContact)
+          )}
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Profile Section */}
-          {this.renderProfileSection()}
+        {/* App Preferences */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: currentColors.text }]}>App Preferences</Text>
+          
+          {renderSettingItem(
+            <Icon name={isDarkMode ? 'dark-mode' : 'light-mode'} size={20} color={currentColors.primary} />,
+            'Dark Mode',
+            isDarkMode ? 'Enabled' : 'Disabled',
+            toggleDarkMode,
+            <Switch
+              value={isDarkMode}
+              onValueChange={toggleDarkMode}
+              trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
+              thumbColor={isDarkMode ? currentColors.primary : '#f4f3f4'}
+            />
+          )}
+          
+          {renderSettingItem(
+            <Icon name="notifications" size={20} color={currentColors.primary} />,
+            'Notifications',
+            notifications ? 'Enabled' : 'Disabled',
+            () => setNotifications(!notifications),
+            <Switch
+              value={notifications}
+              onValueChange={setNotifications}
+              trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
+              thumbColor={notifications ? currentColors.primary : '#f4f3f4'}
+            />
+          )}
+          
+          {renderSettingItem(
+            <Icon name="location-on" size={20} color={currentColors.primary} />,
+            'Location Services',
+            locationServices ? 'Enabled' : 'Disabled',
+            () => setLocationServices(!locationServices),
+            <Switch
+              value={locationServices}
+              onValueChange={setLocationServices}
+              trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
+              thumbColor={locationServices ? currentColors.primary : '#f4f3f4'}
+            />
+          )}
+          
+          {renderSettingItem(
+            <Icon name="fingerprint" size={20} color={currentColors.primary} />,
+            'Biometric Authentication',
+            biometricAuth ? 'Enabled' : 'Disabled',
+            () => setBiometricAuth(!biometricAuth),
+            <Switch
+              value={biometricAuth}
+              onValueChange={setBiometricAuth}
+              trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
+              thumbColor={biometricAuth ? currentColors.primary : '#f4f3f4'}
+            />
+          )}
+        </View>
 
-          {/* Personal Information */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Personal Information</Text>
-            
-            {this.renderSettingItem(
-              <Icon name="email" size={20} color={currentColors.primary} />,
-              'Email Address',
-              userProfile.email,
-              () => this.handleEditField('email', userProfile.email)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="phone" size={20} color={currentColors.primary} />,
-              'Phone Number',
-              userProfile.phone,
-              () => this.handleEditField('phone', userProfile.phone)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="cake" size={20} color={currentColors.primary} />,
-              'Date of Birth',
-              userProfile.dateOfBirth,
-              () => this.handleEditField('dateOfBirth', userProfile.dateOfBirth)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="person-outline" size={20} color={currentColors.primary} />,
-              'Gender',
-              userProfile.gender,
-              () => this.handleEditField('gender', userProfile.gender)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="opacity" size={20} color={currentColors.primary} />,
-              'Blood Group',
-              userProfile.bloodGroup,
-              () => this.handleEditField('bloodGroup', userProfile.bloodGroup)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="location-on" size={20} color={currentColors.primary} />,
-              'Address',
-              userProfile.address,
-              () => this.handleEditField('address', userProfile.address)
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="emergency" size={20} color={currentColors.primary} />,
-              'Emergency Contact',
-              userProfile.emergencyContact,
-              () => this.handleEditField('emergencyContact', userProfile.emergencyContact)
-            )}
-          </View>
+        {/* Support & Legal */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Support & Legal</Text>
+          
+          {renderSettingItem(
+            <Icon name="help-outline" size={20} color={currentColors.primary} />,
+            'Help & Support',
+            'Get help or contact us',
+            () => console.log('Help pressed')
+          )}
+          
+          {renderSettingItem(
+            <Icon name="description" size={20} color={currentColors.primary} />,
+            'Terms of Service',
+            'Read our terms and conditions',
+            () => console.log('Terms pressed')
+          )}
+          
+          {renderSettingItem(
+            <Icon name="privacy-tip" size={20} color={currentColors.primary} />,
+            'Privacy Policy',
+            'Learn about our privacy practices',
+            () => console.log('Privacy pressed')
+          )}
+          
+          {renderSettingItem(
+            <Icon name="info-outline" size={20} color={currentColors.primary} />,
+            'About',
+            'Version 1.0.0',
+            () => console.log('About pressed')
+          )}
+        </View>
 
-          {/* App Preferences */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: currentColors.text }]}>App Preferences</Text>
-            
-            {this.renderSettingItem(
-              <Icon name={this.state.isDarkMode ? 'dark-mode' : 'light-mode'} size={20} color={currentColors.primary} />,
-              'Dark Mode',
-              this.state.isDarkMode ? 'Enabled' : 'Disabled',
-              this.toggleDarkMode,
-              <Switch
-                value={this.state.isDarkMode}
-                onValueChange={this.toggleDarkMode}
-                trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
-                thumbColor={this.state.isDarkMode ? currentColors.primary : '#f4f3f4'}
-              />
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="notifications" size={20} color={currentColors.primary} />,
-              'Notifications',
-              this.state.notifications ? 'Enabled' : 'Disabled',
-              () => this.setState({ notifications: !this.state.notifications }),
-              <Switch
-                value={this.state.notifications}
-                onValueChange={(value) => this.setState({ notifications: value })}
-                trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
-                thumbColor={this.state.notifications ? currentColors.primary : '#f4f3f4'}
-              />
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="location-on" size={20} color={currentColors.primary} />,
-              'Location Services',
-              this.state.locationServices ? 'Enabled' : 'Disabled',
-              () => this.setState({ locationServices: !this.state.locationServices }),
-              <Switch
-                value={this.state.locationServices}
-                onValueChange={(value) => this.setState({ locationServices: value })}
-                trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
-                thumbColor={this.state.locationServices ? currentColors.primary : '#f4f3f4'}
-              />
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="fingerprint" size={20} color={currentColors.primary} />,
-              'Biometric Authentication',
-              this.state.biometricAuth ? 'Enabled' : 'Disabled',
-              () => this.setState({ biometricAuth: !this.state.biometricAuth }),
-              <Switch
-                value={this.state.biometricAuth}
-                onValueChange={(value) => this.setState({ biometricAuth: value })}
-                trackColor={{ false: currentColors.border, true: currentColors.lightBlue }}
-                thumbColor={this.state.biometricAuth ? currentColors.primary : '#f4f3f4'}
-              />
-            )}
-          </View>
+        {/* Account Actions */}
+        <View style={styles.section}>
+          <TouchableOpacity
+            style={[styles.logoutButton, { backgroundColor: currentColors.inputBackground }]}
+            onPress={handleLogout}
+          >
+            <Icon name="logout" size={20} color={currentColors.secondary} />
+            <Text style={[styles.logoutText, { color: currentColors.secondary }]}>Logout</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[styles.deleteButton, { backgroundColor: currentColors.lightRed }]}
+            onPress={handleDeleteAccount}
+          >
+            <Icon name="delete-forever" size={20} color={currentColors.danger} />
+            <Text style={[styles.deleteText, { color: currentColors.danger }]}>Delete Account</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
 
-          {/* Support & Legal */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Support & Legal</Text>
-            
-            {this.renderSettingItem(
-              <Icon name="help-outline" size={20} color={currentColors.primary} />,
-              'Help & Support',
-              'Get help or contact us',
-              () => console.log('Help pressed')
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="description" size={20} color={currentColors.primary} />,
-              'Terms of Service',
-              'Read our terms and conditions',
-              () => console.log('Terms pressed')
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="privacy-tip" size={20} color={currentColors.primary} />,
-              'Privacy Policy',
-              'Learn about our privacy practices',
-              () => console.log('Privacy pressed')
-            )}
-            
-            {this.renderSettingItem(
-              <Icon name="info-outline" size={20} color={currentColors.primary} />,
-              'About',
-              'Version 1.0.0',
-              () => console.log('About pressed')
-            )}
-          </View>
-
-          {/* Account Actions */}
-          <View style={styles.section}>
-            <TouchableOpacity
-              style={[styles.logoutButton, { backgroundColor: currentColors.inputBackground }]}
-              onPress={this.handleLogout}
-            >
-              <Icon name="logout" size={20} color={currentColors.secondary} />
-              <Text style={[styles.logoutText, { color: currentColors.secondary }]}>Logout</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={[styles.deleteButton, { backgroundColor: currentColors.lightRed }]}
-              onPress={this.handleDeleteAccount}
-            >
-              <Icon name="delete-forever" size={20} color={currentColors.danger} />
-              <Text style={[styles.deleteText, { color: currentColors.danger }]}>Delete Account</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        {/* Modals */}
-        {this.renderEditModal()}
-        {this.renderImagePickerModal()}
-      </View>
-    );
-  }
-}
+      {/* Modals */}
+      {renderEditModal()}
+      {renderImagePickerModal()}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
