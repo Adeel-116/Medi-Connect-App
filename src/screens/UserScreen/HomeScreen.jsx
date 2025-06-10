@@ -18,14 +18,14 @@ const colors = {
   lightBlue: '#E3F2FD',
 };
 
-export function HomeScreen({ navigation }) {
-    
+export function HomeScreen() {
+      const { user } = useContext(AuthContext);
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.welcomeSection}>
-            <Text style={styles.greeting}>Good Morning, {}</Text>
+            <Text style={styles.greeting}>Good Morning, {user.fullName}</Text>
             <Text style={styles.subText}>How are you feeling today?</Text>
           </View>
           <TouchableOpacity style={styles.notificationButton}>

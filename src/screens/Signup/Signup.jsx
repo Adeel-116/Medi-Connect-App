@@ -65,6 +65,10 @@ const Signup = ({ navigation }) => {
         navigation.navigate('Login');
       }
     } catch (error) {
+      if(error.response?.status === 401) {
+        showToast('Email already exists. Please use a different email.', 'error');
+        return;
+      }
       let msg = 'Something went wrong.';
       if (error.response?.data?.message) {
         msg = error.response.data.message;

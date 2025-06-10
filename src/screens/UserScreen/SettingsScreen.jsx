@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { AuthContext } from '../../context/AuthContext';
 
 const colors = {
   primary: '#3670c4',
@@ -52,7 +53,8 @@ const darkColors = {
   danger: '#FF4444',
 };
 
-const SettingsScreen = () => {
+const SettingsScreen = ({navigation}) => {
+ const { logout, user } = useContext(AuthContext);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [locationServices, setLocationServices] = useState(true);
@@ -63,8 +65,8 @@ const SettingsScreen = () => {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [userProfile, setUserProfile] = useState({
-    name: 'Ali Rahman',
-    email: 'ali.rahman@email.com',
+    name: user.fullName || 'Ali Rahman',
+    email: user.email || 'example@gmail.com',
     phone: '+92 300 1234567',
     dateOfBirth: '1990-05-15',
     gender: 'Male',
@@ -73,6 +75,7 @@ const SettingsScreen = () => {
     emergencyContact: '+92 321 9876543',
     profileImage: null,
   });
+   
 
   const getCurrentColors = () => {
     return isDarkMode ? darkColors : colors;
@@ -138,9 +141,9 @@ const SettingsScreen = () => {
         {
           text: 'Logout',
           style: 'destructive',
-          onPress: () => {
-            // Handle logout logic here
-            console.log('User logged out');
+          onPress: async () => {
+            await logout();
+           
           },
         },
       ]
@@ -160,7 +163,6 @@ const SettingsScreen = () => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            // Handle account deletion logic here
             console.log('Account deletion requested');
           },
         },
