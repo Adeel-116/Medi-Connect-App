@@ -8,32 +8,40 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // App start hone par user data load karo
+  // Load data from AsyncStorage on app start
   useEffect(() => {
-    const loadUserData = async () => {
+    const loadData = async () => {
       try {
-        const savedUser = await AsyncStorage.getItem('user');
-        const savedToken = await AsyncStorage.getItem('token');
-        if (savedUser && savedToken) {
-          setUser(JSON.parse(savedUser));
-          setToken(savedToken);
+        const storedUser = await AsyncStorage.getItem('user');
+        const storedToken = await AsyncStorage.getItem('token');
+
+        console.log('Loaded user: Auth', storedUser);    
+        console.log('Loaded token: Auth ', storedToken);
+        if (storedUser && storedToken) {
+          setUser(JSON.parse(storedUser));
+          setToken(storedToken);
         }
-      } catch (e) {
-        console.log('Error loading user data:', e);
+      } catch (err) {
+        console.log('Error loading auth data', err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadUserData();
+    loadData();
   }, []);
 
-  // Login function
-  const login = async (userData, userToken) => {
-    setUser(userData);
-    setToken(userToken);
-    await AsyncStorage.setItem('user', JSON.stringify(userData));
-    await AsyncStorage.setItem('token', userToken);
+  // Login function (just sets data)
+  const login = async (userData, authToken) => {
+    try {
+      setUser(userData);
+      setToken(authToken);
+      console.log('User logged in: Auth', userData, authToken);
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await AsyncStorage.setItem('token', authToken);
+    } catch (err) {
+      console.log('Login error:', err);
+    }
   };
 
   // Logout function

@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useContext} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
-const { width } = Dimensions.get('window');
-
+import { AuthContext } from '../../context/AuthContext';
 const colors = {
   primary: '#3670c4',
   secondary: '#FF6F61',
@@ -21,15 +19,17 @@ const colors = {
 };
 
 export class HomeScreen extends Component {
+  
+
   render() {
-    const userName = 'Ali Rahman';
+  
     
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.welcomeSection}>
-            <Text style={styles.greeting}>Good Morning, {userName}</Text>
+            <Text style={styles.greeting}>Good Morning, {}</Text>
             <Text style={styles.subText}>How are you feeling today?</Text>
           </View>
           <TouchableOpacity style={styles.notificationButton}>

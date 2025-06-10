@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,11 @@ import { validateEmail, validatePassword } from '../../utils/validation';
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CustomToast from '../../components/CustomToast';
+import {AuthContext} from "../../context/AuthContext"
+
 
 const Login = ({ navigation }) => {
+  const {login} = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [toast, setToast] = useState({
@@ -46,10 +49,12 @@ const Login = ({ navigation }) => {
       const response = await axios.post('http://192.168.100.2:3000/login', formData);
 
       if (response.status === 200) {
-        showToast('Login successful! 🎉', 'success');
+    
         console.log('Login response:', response.data);
-        const token = response.data.token;
-        console.log('Token:', token);
+        const {token, user} = response.data;
+        console.log('Token & user:', token, user);
+        await login(user, token);
+            showToast('Login successful! 🎉', 'success');
         navigation.navigate("MainApp")
   
       }
