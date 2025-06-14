@@ -7,6 +7,10 @@ const colors = {
   inputBackground: '#FFFFFF',
   buttonText: '#FFFFFF',
   border: '#E5E5E5',
+  success: '#4CAF50',
+  warning: '#FF9800',
+  lightBlue: '#E3F2FD',
+
 
 };
 
