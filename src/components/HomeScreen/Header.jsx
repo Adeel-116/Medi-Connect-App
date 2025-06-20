@@ -43,10 +43,7 @@ function Header() {
           <Icon name="favorite" size={16} color={colors.secondary} />
           <Text style={styles.statusText}>Heart Rate: 72 BPM</Text>
         </View>
-        <View style={styles.statusCard}>
-          <Icon name="wb-sunny" size={16} color={colors.success} />
-          <Text style={styles.statusText}>Today's Goal: 8/10</Text>
-        </View>
+    
       </View>
     </View>
   );
