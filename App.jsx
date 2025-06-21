@@ -36,9 +36,9 @@ function RootNavigator() {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           <Stack.Screen name="OTP" component={OTP} />
-          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} /> */}
         </>
       )}
     </Stack.Navigator>

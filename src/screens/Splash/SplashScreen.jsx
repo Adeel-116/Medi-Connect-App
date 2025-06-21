@@ -23,13 +23,13 @@ const slides = [
   },
   {
     id: '2',
-    image: require('../../assets/splash1.png'),
+    image: require('../../assets/splash2.png'),
     title: 'Easy Appointments',
     subtitle: 'Book appointments with specialists in just a few taps.',
   },
   {
     id: '3',
-    image: require('../../assets/splash1.png'),
+    image: require('../../assets/splash3.png'),
     title: 'Trusted Doctors',
     subtitle: 'Connect with certified and experienced doctors online.',
   },
