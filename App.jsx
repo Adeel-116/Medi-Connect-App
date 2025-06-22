@@ -19,8 +19,6 @@ const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
   const { user, loading } = useContext(AuthContext);
-
-  // SplashCore ko loading state ke liye use karte hain
   if (loading) {
     return <SplashCore />;
   }
@@ -28,17 +26,16 @@ function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
-        // User logged in, main app dikhayen
         <Stack.Screen name="MainApp" component={BottomTabs} />
       ) : (
-        // User nahi hai to auth screens dikhaen
+
         <>
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
-          {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           <Stack.Screen name="OTP" component={OTP} />
-          <Stack.Screen name="NewPassword" component={NewPasswordScreen} /> */}
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
         </>
       )}
     </Stack.Navigator>

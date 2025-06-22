@@ -9,17 +9,17 @@ import {
 } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
-import BackButton from '../../components/BackButton'; 
-import { validateEmail,
+import {
+  validateEmail,
   validatePassword,
   validateName,
   validatePhoneNumber,
-} from '../../utils/validation.js';
+} from '../../utils/validation';
 import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CheckBoxIcon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import CustomToast from '../../components/CustomToast';
+import CustomToast from '../../components/CustomToast'; // ✅ Import
 
 const Signup = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const Signup = ({ navigation }) => {
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
-  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' });
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' }); // ✅ Toast state
 
   const showToast = (message, type = 'info') => {
     setToast({ visible: true, message, type });
@@ -79,117 +79,87 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.formWrapper}>
+          <Text style={styles.title}>Create an Account</Text>
+          <Text style={styles.subtitle}>
+            Create your account by filling in the information below, or sign up with social media.
+          </Text>
 
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Create Account</Text>
-              <Text style={styles.subtitle}>
-                Fill in your details below or sign up with social media
+          <View style={styles.form}>
+            <CustomInput
+              placeholder="Full Name"
+              value={formData.fullName}
+              onChangeText={val => handleChange('fullName', val)}
+              error={errors.fullName}
+            />
+            <CustomInput
+              placeholder="Email"
+              value={formData.email}
+              onChangeText={val => handleChange('email', val)}
+              error={errors.email}
+            />
+            <CustomInput
+              placeholder="Phone Number"
+              value={formData.phoneNumber}
+              onChangeText={val => handleChange('phoneNumber', val)}
+              error={errors.phoneNumber}
+            />
+            <CustomInput
+              placeholder="Password"
+              value={formData.password}
+              onChangeText={val => handleChange('password', val)}
+              secureTextEntry
+              error={errors.password}
+            />
+
+            <View style={styles.termsContainer}>
+              <TouchableOpacity onPress={() => setTermsAccepted(prev => !prev)} activeOpacity={0.7}>
+                <CheckBoxIcon
+                  name={termsAccepted ? 'checkbox-outline' : 'square-outline'}
+                  size={24}
+                  color={'#000'}
+                />
+              </TouchableOpacity>
+              <Text style={styles.termsText}>
+                I agree to the{' '}
+                <Text style={styles.linkText} onPress={() => console.log('Navigate to Terms')}>
+                  Terms & Conditions
+                </Text>
               </Text>
             </View>
+            {!!errors.termsAccepted && (
+              <Text style={styles.errorText}>{errors.termsAccepted}</Text>
+            )}
 
-            <View style={styles.form}>
-              <View style={styles.inputGroup}>
-                <CustomInput
-                  placeholder="Full Name"
-                  value={formData.fullName}
-                  onChangeText={val => handleChange('fullName', val)}
-                  error={errors.fullName}
-                  style={styles.enhancedInput}
-                />
-                <CustomInput
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChangeText={val => handleChange('email', val)}
-                  error={errors.email}
-                  style={styles.enhancedInput}
-                />
-                <CustomInput
-                  placeholder="Phone Number"
-                  value={formData.phoneNumber}
-                  onChangeText={val => handleChange('phoneNumber', val)}
-                  error={errors.phoneNumber}
-                  style={styles.enhancedInput}
-                />
-                <CustomInput
-                  placeholder="Password"
-                  value={formData.password}
-                  onChangeText={val => handleChange('password', val)}
-                  secureTextEntry
-                  error={errors.password}
-                  style={styles.enhancedInput}
-                />
-              </View>
+            <CustomButton title="Sign Up" onPress={handleSignup} containerStyle={{ marginTop: 15 }} />
 
-              <TouchableOpacity 
-                style={styles.termsContainer}
-                onPress={() => setTermsAccepted(prev => !prev)}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.checkbox, termsAccepted && styles.checkboxChecked]}>
-                  <CheckBoxIcon
-                    name={termsAccepted ? 'checkmark' : ''}
-                    size={16}
-                    color={termsAccepted ? '#fff' : 'transparent'}
-                  />
-                </View>
-                <Text style={styles.termsText}>
-                  I agree to the{' '}
-                  <Text style={styles.linkText}>Terms & Conditions</Text>
-                  {' '}and{' '}
-                  <Text style={styles.linkText}>Privacy Policy</Text>
-                </Text>
-              </TouchableOpacity>
-              
-              {!!errors.termsAccepted && (
-                <Text style={styles.errorText}>{errors.termsAccepted}</Text>
-              )}
-
-              <CustomButton 
-                title="Create Account" 
-                onPress={handleSignup} 
-                containerStyle={styles.signupButton} 
-              />
-
-              <View style={styles.dividerContainer}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or continue with</Text>
-                <View style={styles.dividerLine} />
-              </View>
-
-              <View style={styles.socialButtonContainer}>
-                <TouchableOpacity style={styles.socialButton}>
-                  <FancyImageButton
-                    type="google"
-                    imageSource={require('../../assets/google-remove-bg.png')}
-                    onPress={() => console.log('Google pressed')}
-                    containerStyle={styles.socialButtonInner}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.socialButton}>
-                  <FancyImageButton
-                    type="apple"
-                    imageSource={require('../../assets/Iphone.png')}
-                    onPress={() => console.log('Apple ID')}
-                    containerStyle={styles.socialButtonInner}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.loginPrompt}>
-                <Text style={styles.loginPromptText}>
-                  Already have an account?{' '}
-                  <Text 
-                    style={styles.loginPromptLink}
-                    onPress={() => navigation.navigate('Login')}
-                  >
-                    Sign In
-                  </Text>
-                </Text>
-              </View>
+            <View style={styles.orContainer}>
+              <View style={styles.line} />
+              <Text style={styles.orText}>Or sign with</Text>
+              <View style={styles.line} />
             </View>
 
+            <View style={styles.buttonContainer}>
+              <FancyImageButton
+                type="google"
+                imageSource={require('../../assets/google-remove-bg.png')}
+                onPress={() => console.log('Google pressed')}
+                containerStyle={styles.authButton}
+              />
+              <FancyImageButton
+                type="apple"
+                imageSource={require('../../assets/Iphone.png')}
+                onPress={() => console.log('Apple ID')}
+                containerStyle={styles.authButton}
+              />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
 
-        <CustomToast visible={toast.visible} message={toast.message} type={toast.type} />
+      {/* ✅ Custom toast display */}
+      <CustomToast visible={toast.visible} message={toast.message} type={toast.type} />
     </SafeAreaView>
   );
 };
@@ -197,169 +167,77 @@ const Signup = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  gradientBackground: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-  },
-  headerContent: {
-    flex: 1,
-    alignItems: 'center',
-    marginRight: 40, // Compensate for back button
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#fff',
-    textAlign: 'center',
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-    marginTop: 2,
+    backgroundColor: colors.background,
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 40,
   },
-  formCard: {
-    backgroundColor: '#fff',
-    borderRadius: 24,
-    padding: 28,
-    marginTop: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 10,
-  },
-  titleContainer: {
+  formWrapper: {
     alignItems: 'center',
-    marginBottom: 30,
+    width: '100%',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#1a1a1a',
+    fontSize: 30,
+    fontWeight: '700',
+    color: colors.text,
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 15,
-    color: '#6b7280',
+    fontSize: 16,
+    color: colors.placeholder,
+    marginBottom: 10,
     textAlign: 'center',
     lineHeight: 22,
   },
   form: {
     width: '100%',
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  enhancedInput: {
-    marginBottom: 16,
+    paddingVertical: 20,
   },
   termsContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-    paddingHorizontal: 4,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#d1d5db',
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-    marginTop: 2,
-  },
-  checkboxChecked: {
-    backgroundColor: '#667eea',
-    borderColor: '#667eea',
   },
   termsText: {
-    flex: 1,
-    color: '#374151',
+    color: colors.text,
     fontSize: 14,
-    lineHeight: 20,
+    marginLeft: 8,
   },
   linkText: {
-    color: '#667eea',
+    color: colors.primary,
     fontWeight: '600',
+    textDecorationLine: 'underline',
   },
-  errorText: {
-    color: '#ef4444',
-    fontSize: 12,
-    marginBottom: 12,
-    marginLeft: 4,
-  },
-  signupButton: {
-    marginTop: 24,
-    marginBottom: 24,
-    borderRadius: 16,
-    height: 56,
-    backgroundColor: '#667eea',
-  },
-  dividerContainer: {
+  orContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 24,
+    marginVertical: 10,
   },
-  dividerLine: {
+  line: {
     flex: 1,
     height: 1,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: colors.border,
   },
-  dividerText: {
-    marginHorizontal: 16,
-    color: '#6b7280',
+  orText: {
+    marginHorizontal: 10,
+    color: colors.placeholder,
     fontSize: 14,
-    fontWeight: '500',
   },
-  socialButtonContainer: {
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 8,
+    marginTop: -8,
+  },
+  buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 24,
+    justifyContent: 'center',
   },
-  socialButton: {
-    flex: 1,
-    marginHorizontal: 8,
-    borderRadius: 16,
-    backgroundColor: '#f8fafc',
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    overflow: 'hidden',
-  },
-  socialButtonInner: {
-    backgroundColor: 'transparent',
-    paddingVertical: 16,
-  },
-  loginPrompt: {
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  loginPromptText: {
-    color: '#6b7280',
-    fontSize: 14,
-  },
-  loginPromptLink: {
-    color: '#667eea',
-    fontWeight: '600',
+  authButton: {
+    backgroundColor: '#e9ecef',
   },
 });
 
