@@ -12,6 +12,7 @@ import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
 import OTP from './src/screens/OTP/OTP';
 import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
 import BottomTabs from './src/screens/Navigation/BottomTabs';
+import MedicalProfileScreen from './src/screens/ProfileSetup/MedicalProfileScreen';
 
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 
@@ -30,12 +31,14 @@ function RootNavigator() {
       ) : (
 
         <>
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           <Stack.Screen name="OTP" component={OTP} />
-          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} /> */}
+          <Stack.Screen name="MedicalProfileScreen" component={MedicalProfileScreen} /> 
+     
         </>
       )}
     </Stack.Navigator>
