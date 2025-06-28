@@ -15,6 +15,7 @@ import BottomTabs from './src/screens/Navigation/BottomTabs';
 import MedicalProfileScreen from './src/screens/ProfileSetup/MedicalProfileScreen';
 
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
+import HomeScreen from './src/screens/UserScreen/HomeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,14 +32,14 @@ function RootNavigator() {
       ) : (
 
         <>
-          {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           <Stack.Screen name="OTP" component={OTP} />
-          <Stack.Screen name="NewPassword" component={NewPasswordScreen} /> */}
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} /> 
           <Stack.Screen name="MedicalProfileScreen" component={MedicalProfileScreen} /> 
-     
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
         </>
       )}
     </Stack.Navigator>

@@ -17,7 +17,7 @@ const CustomInput = ({
   error,
   inputStyle,
   containerStyle,
-  onForgotPasswordPress,
+  multiline = false,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -29,6 +29,8 @@ const CustomInput = ({
     <View style={[styles.container, containerStyle]}>
       <View style={styles.inputWrapper}>
         <TextInput
+          multiline={multiline}
+          numberOfLines={multiline ? 4 : 1}
           placeholder={placeholder}
           placeholderTextColor={colors.placeholder}
           value={value}
@@ -40,6 +42,7 @@ const CustomInput = ({
             secureTextEntry && { paddingRight: 100 },
             inputStyle,
           ])}
+          
         />
         {secureTextEntry && (
           <View style={styles.rightContainer}>
